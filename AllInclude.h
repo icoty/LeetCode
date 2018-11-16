@@ -31,11 +31,12 @@ using namespace std;
 #define MIN(A,B) (A)<(B)?(A):(B)
 #define SWAP(A, B) {(A) ^= (B); (B) ^= (A); (A) ^= (B);}
 
+typedef unsigned int uint32_t;
+
 struct ListNode {
     int val;
     ListNode *next;
     ListNode(int x) : val(x), next(NULL) {}
 };
-
 
 #endif
