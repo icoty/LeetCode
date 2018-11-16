@@ -1,23 +1,14 @@
 #include "AllInclude.h"
 
-//#define SWAP(A, B) {(A) ^= (B); (B) ^= (A); (A) ^= (B);}
-
 class Solution {
     public:
-        int removeElement(vector<int>& nums, int val) {
-            int len = nums.size() - 1;
-            int idx = 0;
-            for(; idx <= len; ++idx)
-            {
-                if(val == nums[idx])
-                {
-                    SWAP(nums[idx], nums[len]);
-                    --len;
-                    --idx;  
-                }  
-            }
-            return idx;
-        }
+        void deleteNode(ListNode* node) {
+            if(!node)
+                return;
+
+            node->val = node->next->val;
+            node->next = node->next->next;    
+        }   
 };
 
 void trimLeftTrailingSpaces(string &input) {
@@ -47,23 +38,33 @@ vector<int> stringToIntegerVector(string input) {
     return output;
 }
 
+ListNode* stringToListNode(string input) {
+    vector<int> list = stringToIntegerVector(input);
+
+    ListNode* dummyRoot = new ListNode(0);
+    ListNode* ptr = dummyRoot;
+    for(int item : list) {
+        ptr->next = new ListNode(item);
+        ptr = ptr->next;
+    }
+    ptr = dummyRoot->next;
+    delete dummyRoot;
+    return ptr;
+}
+
 int stringToInteger(string input) {
     return stoi(input);
 }
 
-string integerVectorToString(vector<int> list, int length = -1) {
-    if (length == -1) {
-        length = list.size();
-    }
-
-    if (length == 0) {
+string listNodeToString(ListNode* node) {
+    if (node == nullptr) {
         return "[]";
     }
 
     string result;
-    for(int index = 0; index < length; index++) {
-        int number = list[index];
-        result += to_string(number) + ", ";
+    while (node) {
+        result += to_string(node->val) + ", ";
+        node = node->next;
     }
     return "[" + result.substr(0, result.length() - 2) + "]";
 }
@@ -71,13 +72,13 @@ string integerVectorToString(vector<int> list, int length = -1) {
 int main() {
     string line;
     while (getline(cin, line)) {
-        vector<int> nums = stringToIntegerVector(line);
+        ListNode* node = stringToListNode(line);
         getline(cin, line);
-        int val = stringToInteger(line);
+        int n = stringToInteger(line);
 
-        int ret = Solution().removeElement(nums, val);
+        Solution().deleteNode(node);
 
-        string out = integerVectorToString(nums, ret);
+        string out = listNodeToString(node);
         cout << out << endl;
     }
     return 0;

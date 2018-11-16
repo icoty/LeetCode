@@ -1,22 +1,27 @@
 #include "AllInclude.h"
 
-//#define SWAP(A, B) {(A) ^= (B); (B) ^= (A); (A) ^= (B);}
+struct ListNode {
+    int val;
+    ListNode *next;
+    ListNode(int x) : val(x), next(NULL) {}
+};
 
 class Solution {
     public:
-        int removeElement(vector<int>& nums, int val) {
-            int len = nums.size() - 1;
-            int idx = 0;
-            for(; idx <= len; ++idx)
+        ListNode* reverseList(ListNode* head) {
+            ListNode* cur = head;
+            ListNode* prev = NULL;
+
+            while(cur)
             {
-                if(val == nums[idx])
-                {
-                    SWAP(nums[idx], nums[len]);
-                    --len;
-                    --idx;  
-                }  
+                ListNode* tmp = cur->next;
+
+                head = cur;
+                head->next = prev;
+                prev = head;
+                cur = tmp;
             }
-            return idx;
+            return head;
         }
 };
 
@@ -47,23 +52,29 @@ vector<int> stringToIntegerVector(string input) {
     return output;
 }
 
-int stringToInteger(string input) {
-    return stoi(input);
+ListNode* stringToListNode(string input) {
+    vector<int> list = stringToIntegerVector(input);
+
+    ListNode* dummyRoot = new ListNode(0);
+    ListNode* ptr = dummyRoot;
+    for(int item : list) {
+        ptr->next = new ListNode(item);
+        ptr = ptr->next;
+    }
+    ptr = dummyRoot->next;
+    delete dummyRoot;
+    return ptr;
 }
 
-string integerVectorToString(vector<int> list, int length = -1) {
-    if (length == -1) {
-        length = list.size();
-    }
-
-    if (length == 0) {
+string listNodeToString(ListNode* node) {
+    if (node == nullptr) {
         return "[]";
     }
 
     string result;
-    for(int index = 0; index < length; index++) {
-        int number = list[index];
-        result += to_string(number) + ", ";
+    while (node) {
+        result += to_string(node->val) + ", ";
+        node = node->next;
     }
     return "[" + result.substr(0, result.length() - 2) + "]";
 }
@@ -71,13 +82,11 @@ string integerVectorToString(vector<int> list, int length = -1) {
 int main() {
     string line;
     while (getline(cin, line)) {
-        vector<int> nums = stringToIntegerVector(line);
-        getline(cin, line);
-        int val = stringToInteger(line);
+        ListNode* head = stringToListNode(line);
 
-        int ret = Solution().removeElement(nums, val);
+        ListNode* ret = Solution().reverseList(head);
 
-        string out = integerVectorToString(nums, ret);
+        string out = listNodeToString(ret);
         cout << out << endl;
     }
     return 0;

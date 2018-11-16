@@ -27,4 +27,15 @@
 
 using namespace std;
 
+#define MAX(A,B) (A)>(B)?(A):(B)
+#define MIN(A,B) (A)<(B)?(A):(B)
+#define SWAP(A, B) {(A) ^= (B); (B) ^= (A); (A) ^= (B);}
+
+struct ListNode {
+    int val;
+    ListNode *next;
+    ListNode(int x) : val(x), next(NULL) {}
+};
+
+
 #endif

@@ -35,7 +35,7 @@ vector<int> stringToIntegerVector(string input) {
     vector<int> output;
     trimLeftTrailingSpaces(input);
     trimRightTrailingSpaces(input);
-    //input = input.substr(1, input.length() - 2);
+    input = input.substr(1, input.length() - 2);
     stringstream ss;
     ss.str(input);
     string item;
