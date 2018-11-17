@@ -6,14 +6,19 @@ class Solution {
             if(0 == s.size())
                 return 0;
             int i = s.length() - 1;
+            while(i >= 0 && ' ' == s[i]){
+                --i;
+            }
+            if(-1 == i)
+                return 0;
+
+            int last = i;
             while(i >= 0 && ' ' != s[i]){
                 --i;
             }
-
-            if(0 == i)
-                return 0;
-
-            return s.length() - 1 - i;
+            if(-1 == i)
+                return last + 1;
+            return last - i;
         }
 };
 
