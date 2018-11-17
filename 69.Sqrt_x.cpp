@@ -1,5 +1,4 @@
 #include "AllInclude.h"
-
 class Solution {
     public:
         int mySqrt(int x) {
@@ -14,21 +13,22 @@ class Solution {
             while(l <= r)
             {
                 int mid = ( l + r ) / 2;
-                if(mid * mid == x)
+                if(mid == double(x) / mid)  // 必须用double, float精度不够
                     return mid;
-                else if(mid * mid > x) 
+                else if(mid > double(x) / mid) 
                 {
                     r = mid - 1;
-                    if(r * r < x)
+                    if(r < double(x) / r)
                         return r;
                 }
                 else 
                 {
                     l = mid + 1;
-                    if(l * l > x)
+                    if(l > double(x) / l)
                         return mid;
                 }
             }
+            return 0;
         }
 };
 
