@@ -2,23 +2,29 @@
 
 class Solution {
     public:
-        vector<int> twoSum(vector<int>& nums, int target) {
-            vector<int> ret;
-            unordered_map<int,int> has;
-            for(int i=0; i<nums.size();++i)
-                has[nums[i]]=i;
-
-            for(int i=0; i<nums.size(); ++i)
+        int searchInsert(vector<int>& nums, int target) {
+            if(0 == nums.size())
+                return 0;
+            int l = 0;
+            int r = nums.size() - 1;
+            while(l <= r)
             {
-                //int temp = target-nums[i];
-                if(has.count(target-nums[i]) && has[target-nums[i]]!=i)
+                int mid = (l + r) / 2;
+                if(target == nums[mid])
+                    return mid;
+                else if(target < nums[mid])
                 {
-                    ret.push_back(i);
-                    ret.push_back(has[target-nums[i]]);
-                    break;
-                }   
+                    r = mid - 1;
+                    if(target > nums[r])
+                        return mid;                
+                }
+                else
+                {
+                    l = mid + 1;
+                    if(target < nums[l])
+                        return l;
+                }
             }
-            return ret;
         }
 };
 
@@ -53,37 +59,16 @@ int stringToInteger(string input) {
     return stoi(input);
 }
 
-string integerVectorToString(vector<int> list, int length = -1) {
-    if (length == -1) {
-        length = list.size();
-    }
-
-    if (length == 0) {
-        return "[]";
-    }
-
-    string result;
-    for(int index = 0; index < length; index++) {
-        int number = list[index];
-        result += to_string(number) + ", ";
-    }
-    return "[" + result.substr(0, result.length() - 2) + "]";
-}
-
 int main() {
     string line;
-    string aa = "ll";
-    cout << " " << (-1 < aa.size());
-
     while (getline(cin, line)) {
-        // delim = ','
         vector<int> nums = stringToIntegerVector(line);
         getline(cin, line);
         int target = stringToInteger(line);
 
-        vector<int> ret = Solution().twoSum(nums, target);
+        int ret = Solution().searchInsert(nums, target);
 
-        string out = integerVectorToString(ret);
+        string out = to_string(ret);
         cout << out << endl;
     }
     return 0;

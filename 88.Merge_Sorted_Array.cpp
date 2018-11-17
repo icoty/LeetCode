@@ -2,23 +2,20 @@
 
 class Solution {
     public:
-        vector<int> twoSum(vector<int>& nums, int target) {
-            vector<int> ret;
-            unordered_map<int,int> has;
-            for(int i=0; i<nums.size();++i)
-                has[nums[i]]=i;
+        void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
+            int i = m - 1;
+            int j = n - 1;
+            int k = m + n - 1;
 
-            for(int i=0; i<nums.size(); ++i)
+            while(i >= 0 && j >= 0)
             {
-                //int temp = target-nums[i];
-                if(has.count(target-nums[i]) && has[target-nums[i]]!=i)
-                {
-                    ret.push_back(i);
-                    ret.push_back(has[target-nums[i]]);
-                    break;
-                }   
+                nums1[k--] = nums1[i] > nums2[j] ? nums1[i--] : nums2[j--];
             }
-            return ret;
+
+            while(j >= 0)
+            {
+                nums1[k--] = nums2[j--];
+            }    
         }
 };
 
@@ -72,18 +69,18 @@ string integerVectorToString(vector<int> list, int length = -1) {
 
 int main() {
     string line;
-    string aa = "ll";
-    cout << " " << (-1 < aa.size());
-
     while (getline(cin, line)) {
-        // delim = ','
-        vector<int> nums = stringToIntegerVector(line);
+        vector<int> nums1 = stringToIntegerVector(line);
         getline(cin, line);
-        int target = stringToInteger(line);
+        int m = stringToInteger(line);
+        getline(cin, line);
+        vector<int> nums2 = stringToIntegerVector(line);
+        getline(cin, line);
+        int n = stringToInteger(line);
 
-        vector<int> ret = Solution().twoSum(nums, target);
+        Solution().merge(nums1, m, nums2, n);
 
-        string out = integerVectorToString(ret);
+        string out = integerVectorToString(nums1);
         cout << out << endl;
     }
     return 0;

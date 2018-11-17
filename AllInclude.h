@@ -3,6 +3,9 @@
 
 // C standard
 #include <assert.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <memory.h>
 
 #include <string>
 #include <iostream>
@@ -27,8 +30,8 @@
 
 using namespace std;
 
-#define MAX(A,B) (A)>(B)?(A):(B)
-#define MIN(A,B) (A)<(B)?(A):(B)
+#define MAX(A,B) ((A)>(B)?(A):(B))
+#define MIN(A,B) ((A)<(B)?(A):(B))
 #define SWAP(A, B) {(A) ^= (B); (B) ^= (A); (A) ^= (B);}
 
 typedef unsigned int uint32_t;
