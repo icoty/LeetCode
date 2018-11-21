@@ -2,32 +2,19 @@
 
 class Solution {
     public:
-        void getLeaf(vector<int>& leaf, TreeNode* root)
-        {
+        TreeNode* trimBST(TreeNode* root, int L, int R) {
             if(!root)
-                return;
-            else if(!root->left && !root->right)
-                leaf.push_back(root->val);
+                return NULL;
+            if(root->val < L)
+                return trimBST(root->right, L, R);
+            else if(root->val > R)
+                return trimBST(root->left, L, R);
             else
             {
-                getLeaf(leaf, root->left);
-                getLeaf(leaf, root->right);
-            }
-            return;
-        }
-
-        bool leafSimilar(TreeNode* root1, TreeNode* root2) {
-            if(!root1 || !root2)
-                return false;
-            vector<int> leaf1, leaf2;
-            getLeaf(leaf1, root1);
-            getLeaf(leaf2, root2);
-            if(leaf1.size() != leaf2.size())
-                return false;
-            for(int i = 0; i < leaf1.size(); ++i)
-                if(leaf1[i] != leaf2[i])
-                    return false;
-            return true;
+                root->left = trimBST(root->left, L, R);
+                root->right = trimBST(root->right, L, R);
+                return root;
+            } 
         }
 };
 
@@ -89,20 +76,46 @@ TreeNode* stringToTreeNode(string input) {
     return root;
 }
 
-string boolToString(bool input) {
-    return input ? "True" : "False";
+int stringToInteger(string input) {
+    return stoi(input);
+}
+
+string treeNodeToString(TreeNode* root) {
+    if (root == nullptr) {
+        return "[]";
+    }
+
+    string output = "";
+    queue<TreeNode*> q;
+    q.push(root);
+    while(!q.empty()) {
+        TreeNode* node = q.front();
+        q.pop();
+
+        if (node == nullptr) {
+            output += "null, ";
+            continue;
+        }
+
+        output += to_string(node->val) + ", ";
+        q.push(node->left);
+        q.push(node->right);
+    }
+    return "[" + output.substr(0, output.length() - 2) + "]";
 }
 
 int main() {
     string line;
     while (getline(cin, line)) {
-        TreeNode* root1 = stringToTreeNode(line);
+        TreeNode* root = stringToTreeNode(line);
         getline(cin, line);
-        TreeNode* root2 = stringToTreeNode(line);
+        int L = stringToInteger(line);
+        getline(cin, line);
+        int R = stringToInteger(line);
 
-        bool ret = Solution().leafSimilar(root1, root2);
+        TreeNode* ret = Solution().trimBST(root, L, R);
 
-        string out = boolToString(ret);
+        string out = treeNodeToString(ret);
         cout << out << endl;
     }
     return 0;

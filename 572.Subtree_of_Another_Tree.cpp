@@ -2,32 +2,20 @@
 
 class Solution {
     public:
-        void getLeaf(vector<int>& leaf, TreeNode* root)
-        {
-            if(!root)
-                return;
-            else if(!root->left && !root->right)
-                leaf.push_back(root->val);
-            else
-            {
-                getLeaf(leaf, root->left);
-                getLeaf(leaf, root->right);
-            }
-            return;
+        bool isSubtree(TreeNode* s, TreeNode* t) 
+        { 
+            if(!s || !t) 
+                return false;
+            return checkTree(s, t) || isSubtree(s->left, t) || isSubtree(s->right, t); 
         }
 
-        bool leafSimilar(TreeNode* root1, TreeNode* root2) {
-            if(!root1 || !root2)
-                return false;
-            vector<int> leaf1, leaf2;
-            getLeaf(leaf1, root1);
-            getLeaf(leaf2, root2);
-            if(leaf1.size() != leaf2.size())
-                return false;
-            for(int i = 0; i < leaf1.size(); ++i)
-                if(leaf1[i] != leaf2[i])
-                    return false;
-            return true;
+        bool checkTree(TreeNode* s, TreeNode* t)
+        {
+            if(!s && !t) 
+                return true;
+            if(s && t)
+                return s->val == t->val && checkTree(s->right, t->right) && checkTree(s->left, t->left);
+            return false;
         }
 };
 
@@ -96,11 +84,11 @@ string boolToString(bool input) {
 int main() {
     string line;
     while (getline(cin, line)) {
-        TreeNode* root1 = stringToTreeNode(line);
+        TreeNode* s = stringToTreeNode(line);
         getline(cin, line);
-        TreeNode* root2 = stringToTreeNode(line);
+        TreeNode* t = stringToTreeNode(line);
 
-        bool ret = Solution().leafSimilar(root1, root2);
+        bool ret = Solution().isSubtree(s, t);
 
         string out = boolToString(ret);
         cout << out << endl;

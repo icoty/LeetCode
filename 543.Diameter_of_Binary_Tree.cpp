@@ -1,33 +1,25 @@
 #include "AllInclude.h"
 
+#define MAX(A,B) ((A)>(B)?(A):(B))
+
 class Solution {
     public:
-        void getLeaf(vector<int>& leaf, TreeNode* root)
+        int depth(TreeNode* cur, int& ret)
         {
-            if(!root)
-                return;
-            else if(!root->left && !root->right)
-                leaf.push_back(root->val);
-            else
-            {
-                getLeaf(leaf, root->left);
-                getLeaf(leaf, root->right);
-            }
-            return;
+            if(!cur)
+                return 0;
+            int l = depth(cur->left, ret);
+            int r = depth(cur->right, ret);
+            ret = MAX(ret, l+r);
+            return 1 + max(l, r);
         }
 
-        bool leafSimilar(TreeNode* root1, TreeNode* root2) {
-            if(!root1 || !root2)
-                return false;
-            vector<int> leaf1, leaf2;
-            getLeaf(leaf1, root1);
-            getLeaf(leaf2, root2);
-            if(leaf1.size() != leaf2.size())
-                return false;
-            for(int i = 0; i < leaf1.size(); ++i)
-                if(leaf1[i] != leaf2[i])
-                    return false;
-            return true;
+        int diameterOfBinaryTree(TreeNode* root) {
+            if(!root)
+                return 0;
+            int ret = 0;
+            depth(root, ret);
+            return ret;
         }
 };
 
@@ -89,20 +81,14 @@ TreeNode* stringToTreeNode(string input) {
     return root;
 }
 
-string boolToString(bool input) {
-    return input ? "True" : "False";
-}
-
 int main() {
     string line;
     while (getline(cin, line)) {
-        TreeNode* root1 = stringToTreeNode(line);
-        getline(cin, line);
-        TreeNode* root2 = stringToTreeNode(line);
+        TreeNode* root = stringToTreeNode(line);
 
-        bool ret = Solution().leafSimilar(root1, root2);
+        int ret = Solution().diameterOfBinaryTree(root);
 
-        string out = boolToString(ret);
+        string out = to_string(ret);
         cout << out << endl;
     }
     return 0;

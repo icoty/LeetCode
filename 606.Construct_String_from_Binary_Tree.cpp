@@ -2,32 +2,17 @@
 
 class Solution {
     public:
-        void getLeaf(vector<int>& leaf, TreeNode* root)
-        {
-            if(!root)
-                return;
-            else if(!root->left && !root->right)
-                leaf.push_back(root->val);
-            else
-            {
-                getLeaf(leaf, root->left);
-                getLeaf(leaf, root->right);
+        string tree2str(TreeNode* t) {
+            if(!t)
+                return "";
+            string ans = to_string(t->val);
+            if(t->right){
+                ans+= '(' + tree2str(t->left) +')';
+                ans+= '(' + tree2str(t->right) +')';
+            }else if(t->left){
+                ans+= '(' + tree2str(t->left) +')';
             }
-            return;
-        }
-
-        bool leafSimilar(TreeNode* root1, TreeNode* root2) {
-            if(!root1 || !root2)
-                return false;
-            vector<int> leaf1, leaf2;
-            getLeaf(leaf1, root1);
-            getLeaf(leaf2, root2);
-            if(leaf1.size() != leaf2.size())
-                return false;
-            for(int i = 0; i < leaf1.size(); ++i)
-                if(leaf1[i] != leaf2[i])
-                    return false;
-            return true;
+            return ans;        
         }
 };
 
@@ -89,20 +74,14 @@ TreeNode* stringToTreeNode(string input) {
     return root;
 }
 
-string boolToString(bool input) {
-    return input ? "True" : "False";
-}
-
 int main() {
     string line;
     while (getline(cin, line)) {
-        TreeNode* root1 = stringToTreeNode(line);
-        getline(cin, line);
-        TreeNode* root2 = stringToTreeNode(line);
+        TreeNode* t = stringToTreeNode(line);
 
-        bool ret = Solution().leafSimilar(root1, root2);
+        string ret = Solution().tree2str(t);
 
-        string out = boolToString(ret);
+        string out = (ret);
         cout << out << endl;
     }
     return 0;

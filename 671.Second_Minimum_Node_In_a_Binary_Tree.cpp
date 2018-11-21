@@ -1,33 +1,38 @@
 #include "AllInclude.h"
 
+
+#define MAX(A,B) ((A)>(B)?(A):(B))
+#define MIN(A,B) ((A)<(B)?(A):(B))
+
 class Solution {
     public:
-        void getLeaf(vector<int>& leaf, TreeNode* root)
-        {
-            if(!root)
-                return;
-            else if(!root->left && !root->right)
-                leaf.push_back(root->val);
-            else
-            {
-                getLeaf(leaf, root->left);
-                getLeaf(leaf, root->right);
-            }
-            return;
+        int findSecondMinimumValue(TreeNode* root) {
+            int ret = -1;
+            search(root, ret);
+            return ret;
         }
 
-        bool leafSimilar(TreeNode* root1, TreeNode* root2) {
-            if(!root1 || !root2)
-                return false;
-            vector<int> leaf1, leaf2;
-            getLeaf(leaf1, root1);
-            getLeaf(leaf2, root2);
-            if(leaf1.size() != leaf2.size())
-                return false;
-            for(int i = 0; i < leaf1.size(); ++i)
-                if(leaf1[i] != leaf2[i])
-                    return false;
-            return true;
+        void search(TreeNode* root, int& ret)
+        {
+            if(!root || !root->left || !root->right)
+                return;
+            if(root->left->val == root->right->val)
+            {
+                search(root->left, ret);
+                search(root->right, ret);
+            }else{
+                int tmp = MAX(root->left->val, root->right->val);
+                if(-1 == ret){
+                    ret = tmp;
+                }else{
+                    ret = MIN(ret, tmp);
+                }
+
+                if(root->left->val < root->right->val) 
+                    search(root->left, ret);
+                else 
+                    search(root->right, ret);
+            }
         }
 };
 
@@ -89,20 +94,14 @@ TreeNode* stringToTreeNode(string input) {
     return root;
 }
 
-string boolToString(bool input) {
-    return input ? "True" : "False";
-}
-
 int main() {
     string line;
     while (getline(cin, line)) {
-        TreeNode* root1 = stringToTreeNode(line);
-        getline(cin, line);
-        TreeNode* root2 = stringToTreeNode(line);
+        TreeNode* root = stringToTreeNode(line);
 
-        bool ret = Solution().leafSimilar(root1, root2);
+        int ret = Solution().findSecondMinimumValue(root);
 
-        string out = boolToString(ret);
+        string out = to_string(ret);
         cout << out << endl;
     }
     return 0;
