@@ -2,41 +2,39 @@
 
 class Solution {
     public:
-        TreeNode* increaseOrder(TreeNode* root)
+        vector<int> findMode(TreeNode* root) 
         {
-            TreeNode* tmp;
-            if(!root->left && !root->right)
-            {
-                return root;
-            }
-            else if(!root->left && root->right)
-            {
-                root->right = increasingBST(root->right);
-                tmp = root;
-            }else if(root->left && !root->right){
-                tmp = increasingBST(root->left);
-                TreeNode* cur = tmp;
-                while(cur && cur->right)
-                    cur = cur->right;
-                cur->right = root;
-                root->left = NULL;
-            }else if(root->left && root->right){
-                tmp = increasingBST(root->left);
-                TreeNode* cur = tmp;
-                while(cur && cur->right)
-                    cur = cur->right;
-                cur->right = root;
-                root->left = NULL;
-                TreeNode* r = increasingBST(root->right);
-                root->right = r;
-            }
-            return tmp;        
+            if(!root) 
+                return {};
+            vector<int> ret;
+            TreeNode* pre = NULL;
+            int max = 0;
+            int count = 1;
+            inorder(root, pre, max, count, ret);
+            return ret;
         }
 
-        TreeNode* increasingBST(TreeNode* root) {
-            if(!root)
-                return NULL;
-            return increaseOrder(root);
+        void inorder(TreeNode* root, TreeNode*& pre, int& max, int& count, vector<int>& ret){
+            if(!root) 
+                return;
+            inorder(root->left, pre, max, count, ret);
+            if(NULL != pre) 
+            {
+                if(root->val == pre->val){
+                    ++count;
+                }else{
+                    count = 1;
+                }
+            }
+            if(count >= max) {
+                if(count > max) {
+                    ret.clear();
+                }
+                ret.push_back(root->val);
+                max = count;
+            }
+            pre = root;
+            inorder(root->right, pre, max, count, ret);
         }
 };
 
@@ -98,28 +96,21 @@ TreeNode* stringToTreeNode(string input) {
     return root;
 }
 
-string treeNodeToString(TreeNode* root) {
-    if (root == nullptr) {
+string integerVectorToString(vector<int> list, int length = -1) {
+    if (length == -1) {
+        length = list.size();
+    }
+
+    if (length == 0) {
         return "[]";
     }
 
-    string output = "";
-    queue<TreeNode*> q;
-    q.push(root);
-    while(!q.empty()) {
-        TreeNode* node = q.front();
-        q.pop();
-
-        if (node == nullptr) {
-            output += "null, ";
-            continue;
-        }
-
-        output += to_string(node->val) + ", ";
-        q.push(node->left);
-        q.push(node->right);
+    string result;
+    for(int index = 0; index < length; index++) {
+        int number = list[index];
+        result += to_string(number) + ", ";
     }
-    return "[" + output.substr(0, output.length() - 2) + "]";
+    return "[" + result.substr(0, result.length() - 2) + "]";
 }
 
 int main() {
@@ -127,9 +118,9 @@ int main() {
     while (getline(cin, line)) {
         TreeNode* root = stringToTreeNode(line);
 
-        TreeNode* ret = Solution().increasingBST(root);
+        vector<int> ret = Solution().findMode(root);
 
-        string out = treeNodeToString(ret);
+        string out = integerVectorToString(ret);
         cout << out << endl;
     }
     return 0;

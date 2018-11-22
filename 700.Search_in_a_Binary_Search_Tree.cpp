@@ -2,41 +2,15 @@
 
 class Solution {
     public:
-        TreeNode* increaseOrder(TreeNode* root)
-        {
-            TreeNode* tmp;
-            if(!root->left && !root->right)
-            {
-                return root;
-            }
-            else if(!root->left && root->right)
-            {
-                root->right = increasingBST(root->right);
-                tmp = root;
-            }else if(root->left && !root->right){
-                tmp = increasingBST(root->left);
-                TreeNode* cur = tmp;
-                while(cur && cur->right)
-                    cur = cur->right;
-                cur->right = root;
-                root->left = NULL;
-            }else if(root->left && root->right){
-                tmp = increasingBST(root->left);
-                TreeNode* cur = tmp;
-                while(cur && cur->right)
-                    cur = cur->right;
-                cur->right = root;
-                root->left = NULL;
-                TreeNode* r = increasingBST(root->right);
-                root->right = r;
-            }
-            return tmp;        
-        }
-
-        TreeNode* increasingBST(TreeNode* root) {
+        TreeNode* searchBST(TreeNode* root, int val) {
             if(!root)
                 return NULL;
-            return increaseOrder(root);
+            if(root->val == val)
+                return root;
+            else if(root->val < val)
+                return searchBST(root->right, val);
+            else
+                return searchBST(root->left, val);
         }
 };
 
@@ -98,6 +72,10 @@ TreeNode* stringToTreeNode(string input) {
     return root;
 }
 
+int stringToInteger(string input) {
+    return stoi(input);
+}
+
 string treeNodeToString(TreeNode* root) {
     if (root == nullptr) {
         return "[]";
@@ -126,8 +104,10 @@ int main() {
     string line;
     while (getline(cin, line)) {
         TreeNode* root = stringToTreeNode(line);
+        getline(cin, line);
+        int val = stringToInteger(line);
 
-        TreeNode* ret = Solution().increasingBST(root);
+        TreeNode* ret = Solution().searchBST(root, val);
 
         string out = treeNodeToString(ret);
         cout << out << endl;
