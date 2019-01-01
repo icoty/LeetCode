@@ -2,6 +2,7 @@
 
 class Solution {
     public:
+#if 0
         vector<int> maxSlidingWindow(vector<int>& nums, int k) {
             if(0 == nums.size())
                 return {};
@@ -11,10 +12,10 @@ class Solution {
             map<int, int> mp;
             int i = 0;
             for(; i < k; ++i)
-                ++mp[nums[i]];         // map本身key值升序
+                ++mp[nums[i]];        
 
             vector<int> ret;        
-            ret.push_back(mp.rbegin()->first);
+            ret.push_back(mp.rbegin()->first);  // map is sort by it's key, so mp.rbegin()->first must be the max of Sliding Window of size k
 
             while(i < nums.size()){
                 ++mp[nums[i]];
@@ -26,6 +27,24 @@ class Solution {
 
             return ret;
         }
+#else
+        vector<int> maxSlidingWindow(vector<int>& nums, int k) {
+            vector<int> ret;
+            deque<int> q;
+            for(int i = 0; i < nums.size(); ++i){
+                if(!q.empty() && i - k == q.front())
+                    q.pop_front();
+
+                while(!q.empty() && nums[q.back()] < nums[i])
+                    q.pop_back();
+                q.push_back(i);
+                if(i - k + 1 >= 0)  //Slid Window index range from i-k+1 to i
+                    ret.push_back(nums[q.front()]);
+            }
+
+            return ret;
+        }
+#endif
 };
 
 void trimLeftTrailingSpaces(string &input) {
