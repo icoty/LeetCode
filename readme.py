@@ -51,8 +51,10 @@ class Config:
     github_url = 'https://github.com/icoty/LeetCode'
     leetcode_url = 'https://leetcode.com/problems/'
     difficulty = ['#', 'Easy', 'Medium', 'Hard']
+    
+    # 显示在README.md中的格式
     column = {
-        '#': lambda item: "%03d" % item['stat']['frontend_question_id'],
+        '#': lambda item: "%d" % item['stat']['frontend_question_id'], 
         'Title': lambda item: '[%s](%s%s)' % (
             item['stat']['question__title'], Config.leetcode_url, item['stat']['question__title_slug']),
         'Difficulty': lambda item: Config.difficulty[item['difficulty']['level']],
@@ -141,7 +143,7 @@ def get(solution_path):
 
     file_list = os.listdir(solution_path)[0:-1]
     print(file_list)
-    solution_list = [int(item.split('.')[0]) for item in file_list if item[-3:]=='cpp']
+    solution_list = [int(item.split('.')[0]) for item in file_list if item[-3:]=='cpp']     # 匹配语言后缀
     print(solution_list)
 
     def cnt_by_diff(level):
@@ -164,4 +166,4 @@ def update(solution_path):
 
 
 if __name__ == '__main__':
-    update('./')  # update solution table and
+    update('Algorithms/')  # update solution table and
